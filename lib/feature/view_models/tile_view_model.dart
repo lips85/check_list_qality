@@ -27,7 +27,7 @@ class TileViewModel extends StateNotifier<List<TileModel>> {
           TileModel(
             isSelected: state[i].isSelected,
             isNA: state[i].isNA,
-            counter: (state[i].counter + 1) % 4,
+            counter: (state[i].counter + 1) % 3,
           )
         else
           state[i]

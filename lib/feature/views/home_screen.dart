@@ -3,6 +3,7 @@ import 'package:check_list_qality/feature/view_models/tile_view_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   HomeScreen({super.key});
@@ -66,6 +67,7 @@ class CheckListWidget extends ConsumerWidget {
 
     return Column(
       children: [
+        const Gap(30),
         Expanded(
           child: ListView.builder(
             itemCount: itemCount,
@@ -88,12 +90,14 @@ class CheckListWidget extends ConsumerWidget {
                   child: Stack(
                     children: [
                       ListTile(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          side: BorderSide(color: Colors.grey),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          side: BorderSide(color: Colors.grey.shade300),
                         ),
                         tileColor: tile.counter > 0
-                            ? Colors.blue[100 * tile.counter]
+                            ? const Color(0x0f23656A)
+                                .withOpacity(tile.counter * 0.2)
                             : Colors.white,
                         title: Text(
                           frontItems[index],
@@ -108,7 +112,7 @@ class CheckListWidget extends ConsumerWidget {
                             fontSize: 13,
                           ),
                         ),
-                        trailing: Text(tile.counter.toString()),
+                        trailing: Text((tile.counter / 2).toString()),
                       ),
                       if (tile.isNA)
                         Positioned.fill(
