@@ -1,12 +1,13 @@
 import 'package:check_list_qality/feature/const/questions/questions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
   final title = titleItems;
-  final items = followItems;
+  final List<List<List<String>>> items = itemsAll;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,18 +40,27 @@ class CheckListWidget extends StatelessWidget {
     required this.items,
   });
 
-  final List<String> items;
+  final List<List<String>> items;
 
   @override
   Widget build(BuildContext context) {
+    final List<String> frontItems = items[0];
+    final List<String> backItems = items[1];
+    final List<bool> isChecked = List<bool>.filled(items[0].length, false);
+
+    void clickCheck() {}
     return Column(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: items.length,
+          child: ListView.separated(
+            itemCount: frontItems.length,
+            separatorBuilder: (context, index) => const Divider(),
             itemBuilder: (context, followingIndex) {
-              return Text(
-                items[followingIndex],
+              return CheckboxListTile(
+                value: isChecked[followingIndex],
+                onChanged: (context) => clickCheck,
+                title: Text(frontItems[followingIndex]),
+                subtitle: Text(backItems[followingIndex]),
               );
             },
           ),
