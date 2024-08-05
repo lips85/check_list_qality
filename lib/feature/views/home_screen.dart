@@ -1,31 +1,122 @@
-import 'package:check_list_qality/feature/const/questions/questions.dart';
 import 'package:check_list_qality/feature/view_models/tile_view_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
-  HomeScreen({super.key});
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:excel/excel.dart';
+import 'dart:typed_data';
 
-  final titles = titleItems;
-  final List<List<List<String>>> items = itemsAll;
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  late List<List<List<String>>> items = [];
+  late List<String> titles = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadExcelData();
+  }
+
+  Future _loadExcelData() async {
+    // 엑셀 파일을 assets에서 불러오기
+    ByteData data = await rootBundle.load('assets/excel/checklist.xlsx');
+    var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+    // 엑셀 파일을 파싱
+    var excel = Excel.decodeBytes(bytes);
+
+    var sheetLowData = [];
+
+    for (var table in excel.tables.keys) {
+      var sheet = excel.tables[table];
+      var sheetData = [];
+      sheetData.add(table);
+      if (sheet != null) {
+        for (var row in sheet.rows) {
+          for (var cell in row) {
+            if (cell != null) {
+              // print("cell: ${cell.value}"); // 각 셀의 데이터를 출력
+              sheetData.add(cell.value);
+            }
+          }
+        }
+        sheetLowData.add(sheetData);
+      }
+    }
+
+    sheetLowData = sheetLowData.sublist(0, 9);
+
+    for (var i = 0; i < sheetLowData.length; i++) {
+      List<List<String>> item = [];
+      List<String> itemsA = sheetLowData[i]
+          .skip(1)
+          .where((value) => sheetLowData[i].indexOf(value) % 3 == 1)
+          .map<String>((value) {
+        if (value is String) {
+          return value;
+        } else if (value is TextCellValue) {
+          return value.value;
+        } else if (value is IntCellValue) {
+          return value.value.toString();
+        } else {
+          return value.toString();
+        }
+      }).toList();
+      List<String> itemsB = sheetLowData[i]
+          .skip(1)
+          .where((value) => sheetLowData[i].indexOf(value) % 3 == 2)
+          .map<String>((value) {
+        if (value is String) {
+          return value;
+        } else if (value is TextCellValue) {
+          return value.value;
+        } else if (value is IntCellValue) {
+          return value.value.toString();
+        } else {
+          return value.toString();
+        }
+      }).toList();
+      List<String> itemsC = sheetLowData[i]
+          .skip(1)
+          .where((value) => sheetLowData[i].indexOf(value) % 3 == 0)
+          .map<String>((value) {
+        if (value is String) {
+          return value;
+        } else if (value is TextCellValue) {
+          return value.value;
+        } else if (value is IntCellValue) {
+          return value.value.toString();
+        } else {
+          return value.toString();
+        }
+      }).toList();
+      item = [itemsA, itemsB, itemsC];
+
+      titles.add(sheetLowData[i][0].toString());
+      items.add(item);
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: widget.titles.length,
+      length: titles.length,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('내부심사 체크리스트'),
           bottom: TabBar(
             tabs: [
-              for (var title in widget.titles)
+              for (var title in titles)
                 Tab(
                   text: title,
                 ),
@@ -34,7 +125,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         body: TabBarView(
           children: [
-            for (var item in widget.items)
+            for (var item in items)
               CheckListWidget(
                 items: item,
               ),

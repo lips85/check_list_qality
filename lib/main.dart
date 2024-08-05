@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // home: HomeScreen(),
-      home: const ExcelReaderScreen(),
+      home: const HomeScreen(),
     );
   }
 }

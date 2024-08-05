@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:excel/excel.dart';
+import 'dart:typed_data';
+
 const List<String> titleItems = [
   "품질서류",
   "토공, 흙막이",
@@ -22,9 +27,12 @@ final List<List<List<String>>> itemsAll = [
   itemsSystems,
 ];
 
-final List<List<String>> itemsSystems = [itemsSystemsB, itemsSystemsC];
+final List<List<String>> itemsSystems = [
+  itemsSystemsA,
+  itemsSystemsB,
+];
 
-List<String> itemsSystemsB = [
+List<String> itemsSystemsA = [
   "표준화",
   "목표관리",
   "품질관리계획서, 시험계획서 확인",
@@ -46,7 +54,7 @@ List<String> itemsSystemsB = [
   "기타 서류"
 ];
 
-List<String> itemsSystemsC = [
+List<String> itemsSystemsB = [
   "품질관리계획서, 시험계획서 표준안 적용",
   """1. 현장 품질방침 및 목표 작성 확인 
 2. 세부목표 및 이행 확인 (기간별 누적관리)""",

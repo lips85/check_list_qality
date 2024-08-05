@@ -27,15 +27,45 @@ class _ExcelReaderScreenState extends State<ExcelReaderScreen> {
       // 엑셀 파일을 파싱
       var excel = Excel.decodeBytes(bytes);
 
-      // 첫 번째 시트의 데이터를 읽어오기
+      var allData = [];
+
       for (var table in excel.tables.keys) {
         print('Sheet: $table'); // 시트 이름
         var sheet = excel.tables[table];
+        var sheetData = [];
+        sheetData.add(table);
         if (sheet != null) {
           for (var row in sheet.rows) {
-            print(row); // 각 행의 데이터를 출력
+            for (var cell in row) {
+              if (cell != null) {
+                // print("cell: ${cell.value}"); // 각 셀의 데이터를 출력
+                sheetData.add(cell.value);
+              }
+            }
           }
+          allData.add(sheetData);
         }
+      }
+
+      allData = allData.sublist(0, 9);
+      print(allData.length);
+      List<List<List<String>>> allItems = [];
+      for (var i = 0; i < allData.length; i++) {
+        List<List<String>> items = [];
+        List<String> itemsA = allData[i]
+            .skip(1)
+            .where((value) => allData[i].indexOf(value) % 3 == 1)
+            .toList();
+        List<String> itemsB = allData[i]
+            .skip(1)
+            .where((value) => allData[i].indexOf(value) % 3 == 2)
+            .toList();
+        List<String> itemsC = allData[i]
+            .skip(1)
+            .where((value) => allData[i].indexOf(value) % 3 == 0)
+            .toList();
+        items = [itemsA, itemsB, itemsC];
+        allItems.add(items);
       }
     } catch (e) {
       print('Error: $e');
