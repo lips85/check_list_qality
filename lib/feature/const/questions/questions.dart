@@ -1,7 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:excel/excel.dart';
-import 'dart:typed_data';
 
 const List<String> titleItems = [
   "품질서류",
