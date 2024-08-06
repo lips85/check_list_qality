@@ -1,4 +1,4 @@
-import 'package:check_list_qality/feature/views/home_screen.dart';
+import 'package:check_list_qality/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,20 +13,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Checklist App',
       theme: ThemeData(
-        useMaterial3: true,
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Colors.black),
-          bodyMedium: TextStyle(color: Colors.black),
-        ),
+        primarySwatch: Colors.blue,
       ),
-      // home: HomeScreen(),
       home: const HomeScreen(),
     );
   }
