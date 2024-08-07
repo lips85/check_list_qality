@@ -12,7 +12,7 @@ class TileRepository {
 
     for (var i = 0; i < sheetLowData.length; i++) {
       var sheetData = sheetLowData[i];
-      var system = sheetData[0].toString();
+      var check = sheetData[0].toString();
       List<String> itemsA = sheetData
           .skip(1)
           .where((value) => sheetData.indexOf(value) % 3 == 1)
@@ -34,7 +34,7 @@ class TileRepository {
           frontText: itemsA[j],
           backText: j < itemsB.length ? itemsB[j] : '',
           points: j < itemsC.length ? itemsC[j] : 0,
-          system: system,
+          check: check,
         ));
       }
     }

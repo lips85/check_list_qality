@@ -13,39 +13,52 @@ class TileViewModel extends StateNotifier<Map<String, List<TileModel>>> {
     final groupedTiles = <String, List<TileModel>>{};
 
     for (var tile in tiles) {
-      groupedTiles.putIfAbsent(tile.system, () => []);
-      groupedTiles[tile.system]!.add(tile);
+      groupedTiles.putIfAbsent(tile.check, () => []);
+      groupedTiles[tile.check]!.add(tile);
     }
 
     state = groupedTiles;
   }
 
-  void toggleCounter(String system, int index) {
+  void toggleCounter(String check, int index) {
     state = {
       ...state,
-      system: [
-        for (int i = 0; i < state[system]!.length; i++)
+      check: [
+        for (int i = 0; i < state[check]!.length; i++)
           if (i == index)
-            state[system]![i].copyWith(
-              counter: state[system]![i].counter == 1
+            state[check]![i].copyWith(
+              counter: state[check]![i].counter == 1
                   ? 0
-                  : state[system]![i].counter + 0.5,
+                  : state[check]![i].counter + 0.5,
             )
           else
-            state[system]![i]
+            state[check]![i]
       ],
     };
   }
 
-  void markAsNA(String system, int index) {
+  void clickCounter(String check, int index, double point) {
     state = {
       ...state,
-      system: [
-        for (int i = 0; i < state[system]!.length; i++)
+      check: [
+        for (int i = 0; i < state[check]!.length; i++)
           if (i == index)
-            state[system]![i].copyWith(isNA: !state[system]![i].isNA)
+            state[check]![i].copyWith(counter: point)
           else
-            state[system]![i]
+            state[check]![i]
+      ],
+    };
+  }
+
+  void markAsNA(String check, int index) {
+    state = {
+      ...state,
+      check: [
+        for (int i = 0; i < state[check]!.length; i++)
+          if (i == index)
+            state[check]![i].copyWith(isNA: !state[check]![i].isNA, counter: 0)
+          else
+            state[check]![i]
       ],
     };
   }
