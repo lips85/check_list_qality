@@ -1,5 +1,6 @@
 import 'package:check_list_qality/view_models/tile_view_model.dart';
 import 'package:check_list_qality/views/checklist_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,9 +25,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final groupedTiles = ref.watch(tileViewModelProvider);
-    final systems = groupedTiles.keys.toList();
+    final checkLists = groupedTiles.keys.toList();
 
-    if (systems.isEmpty) {
+    if (checkLists.isEmpty) {
       return Scaffold(
         appBar: AppBar(
           title: const Text('내부심사 체크리스트'),
@@ -38,26 +39,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     return DefaultTabController(
-      length: systems.length,
+      length: checkLists.length,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('내부심사 체크리스트'),
           bottom: TabBar(
             isScrollable: true,
             tabs: [
-              for (var system in systems)
+              for (var check in checkLists)
                 Tab(
-                  text: system,
+                  text: check,
                 ),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            for (var system in systems)
+            for (var check in checkLists)
               CheckListWidget(
-                system: system,
-                items: groupedTiles[system]!,
+                check: check,
+                items: groupedTiles[check]!,
               ),
           ],
         ),

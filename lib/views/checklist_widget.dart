@@ -7,11 +7,11 @@ import 'package:gap/gap.dart';
 class CheckListWidget extends ConsumerWidget {
   const CheckListWidget({
     super.key,
-    required this.system,
+    required this.check,
     required this.items,
   });
 
-  final String system;
+  final String check;
   final List<TileModel> items;
 
   @override
@@ -33,11 +33,11 @@ class CheckListWidget extends ConsumerWidget {
                 child: GestureDetector(
                   onTap: () {
                     if (!tile.isNA) {
-                      viewModel.toggleCounter(system, index);
+                      viewModel.toggleCounter(check, index);
                     }
                   },
                   onHorizontalDragEnd: (details) {
-                    viewModel.markAsNA(system, index);
+                    viewModel.markAsNA(check, index);
                   },
                   child: Stack(
                     children: [
@@ -64,7 +64,7 @@ class CheckListWidget extends ConsumerWidget {
                             fontSize: 13,
                           ),
                         ),
-                        trailing: Text(tile.counter.toString()),
+                        trailing: Text("${tile.counter * tile.points}"),
                       ),
                       if (tile.isNA)
                         Positioned.fill(

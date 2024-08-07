@@ -23,16 +23,17 @@ class TileRepository {
           .where((value) => sheetData.indexOf(value) % 3 == 2)
           .map<String>((value) => value.toString())
           .toList();
-      List<String> itemsC = sheetData
+      List<num> itemsC = sheetData
           .skip(1)
           .where((value) => sheetData.indexOf(value) % 3 == 0)
-          .map<String>((value) => value.toString())
+          .map<num>((value) => value.value)
           .toList();
 
       for (var j = 0; j < itemsA.length; j++) {
         tiles.add(TileModel(
           frontText: itemsA[j],
           backText: j < itemsB.length ? itemsB[j] : '',
+          points: j < itemsC.length ? itemsC[j] : 0,
           system: system,
         ));
       }
