@@ -1,11 +1,9 @@
 import 'package:check_list_qality/models/tile_model.dart';
-import 'package:check_list_qality/repositories/tile_repository.dart';
+
 import 'package:check_list_qality/view_models/tile_view_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CheckListWidget extends ConsumerWidget {
   const CheckListWidget({
@@ -33,105 +31,116 @@ class CheckListWidget extends ConsumerWidget {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Column(
+                child: Stack(
                   children: [
-                    Stack(
-                      children: [
-                        ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            side: BorderSide(color: Colors.grey.shade300),
-                          ),
-                          tileColor: tile.counter > 0
-                              ? const Color(0x0f23656A)
-                                  .withOpacity(tile.counter / tile.points * 0.5)
-                              : Colors.white,
-                          title: Text(
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        side: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      tileColor: tile.counter > 0
+                          ? const Color(0x0f23656A)
+                              .withOpacity(tile.counter / tile.points * 0.5)
+                          : Colors.white,
+                      leading: Text(
+                        (index + 1).toString(),
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
                             tile.frontText,
-                            style: GoogleFonts.notoSans(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          subtitle: Text(
+                          Text(
                             tile.backText,
                             style: const TextStyle(
                               fontSize: 13,
                             ),
                           ),
-                          trailing: Text("${tile.counter}"),
-                        ),
-                        if (tile.isNA)
-                          Positioned.fill(
+                          const Gap(10)
+                        ],
+                      ),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          PointButton(
+                            tile: tile,
+                            index: index,
+                            num: 0.0,
+                            viewModel: viewModel,
+                            check: check,
+                          ),
+                          PointButton(
+                            tile: tile,
+                            index: index,
+                            num: 0.5,
+                            viewModel: viewModel,
+                            check: check,
+                          ),
+                          PointButton(
+                            tile: tile,
+                            index: index,
+                            num: 1.0,
+                            viewModel: viewModel,
+                            check: check,
+                          ),
+                          const Gap(30),
+                          GestureDetector(
+                            onTap: () {
+                              viewModel.markAsNA(check, index);
+                            },
                             child: Container(
-                              color: Colors.black.withOpacity(0.5),
-                              child: const Center(
-                                child: Text(
-                                  "N/A 처리",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              alignment: Alignment.center,
+                              width: 60,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: tile.isNA
+                                    ? const Color(0x0f23656A).withOpacity(0.5)
+                                    : Colors.grey.shade300,
+                              ),
+                              child: Text(
+                                "N/A",
+                                style: TextStyle(
+                                  color:
+                                      tile.isNA ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
                           ),
-                      ],
+                        ],
+                      ),
                     ),
-                    const Gap(10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CupertinoButton(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          onPressed: () {
-                            if (!tile.isNA) {
-                              viewModel.clickCounter(check, index, 0.0);
-                            }
-                          },
-                          color: (tile.counter == 0.0) && (!tile.isNA)
-                              ? Colors.blue
-                              : Colors.grey.shade300,
-                          child: const Text("0.0"),
-                        ),
-                        CupertinoButton(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          onPressed: () {
-                            if (!tile.isNA) {
-                              viewModel.clickCounter(
-                                  check, index, 0.5 * tile.points);
-                            }
-                          },
-                          color: tile.counter == (0.5 * tile.points)
-                              ? Colors.blue
-                              : Colors.grey.shade300,
-                          child: Text("${0.5 * tile.points}"),
-                        ),
-                        CupertinoButton(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          onPressed: () {
-                            if (!tile.isNA) {
-                              viewModel.clickCounter(
-                                  check, index, 1.0 * tile.points);
-                            }
-                          },
-                          color: tile.counter == (1.0 * tile.points)
-                              ? Colors.blue
-                              : Colors.grey.shade300,
-                          child: Text("${1 * tile.points}.0"),
-                        ),
-                        CupertinoButton(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          onPressed: () {
+                    if (tile.isNA)
+                      Positioned.fill(
+                        child: GestureDetector(
+                          onTap: () {
                             viewModel.markAsNA(check, index);
                           },
-                          color: tile.isNA ? Colors.blue : Colors.grey.shade300,
-                          child: const Text("N/A"),
+                          child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            child: const Center(
+                              child: Text(
+                                "N/A 처리",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ],
-                    )
+                      ),
                   ],
                 ),
               );
@@ -139,6 +148,51 @@ class CheckListWidget extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PointButton extends StatelessWidget {
+  const PointButton({
+    super.key,
+    required this.tile,
+    required this.viewModel,
+    required this.check,
+    required this.index,
+    required this.num,
+  });
+
+  final TileModel tile;
+  final TileViewModel viewModel;
+  final String check;
+  final int index;
+  final double num;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        if (!tile.isNA) {
+          viewModel.clickCounter(check, index, num * tile.points);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: tile.counter == (num * tile.points) && (!tile.isNA)
+              ? const Color(0x0f23656A).withOpacity(0.5)
+              : Colors.grey.shade300,
+        ),
+        child: Text(
+          "${num * tile.points}",
+          style: TextStyle(
+            color: tile.counter == (num * tile.points) && (!tile.isNA)
+                ? Colors.white
+                : Colors.black,
+          ),
+        ),
+      ),
     );
   }
 }
